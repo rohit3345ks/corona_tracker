@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-2">
+    <div class="row">
+        <div class="card text-center col-sm mx-3 my-2 bg-info text-white">
+            <div class="card-header">
+                Infected
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{confirmedCases}}</h5>
+                <p class="card-text">Number of active cases of COVID-19</p>
+            </div>
+            <div class="card-footer text-white">
+                {{lastUpdate}}
+            </div>
+        </div>
+        <div class="card text-center text-white bg-success col-sm mx-3 my-2">
+            <div class="card-header">
+                Recovered
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{recoveredCases}}</h5>
+                <p class="card-text">Number of recoveries from COVID-19</p>
+            </div>
+            <div class="card-footer text-white">
+                {{lastUpdate}}
+            </div>
+        </div>
+        <div class="card text-center text-white bg-danger col-sm mx-3 my-2">
+            <div class="card-header">
+                Deaths
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{deathCount}}</h5>
+                <p class="card-text">Number of deaths caused by COVID-19</p>
+                
+            </div>
+            <div class="card-footer text-white">
+                {{lastUpdate}}
+            </div>
+        </div>
+    </div>
+</div>
+<br><br><br><br><br><br>
+<div class="container">
+    <form class="form-inline" method="POST" action="countryInfo">
+        {% csrf_token %}
+        <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Select the country:</label>
+        <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref" name="c_list">
+            {% if selected_country %}
+            <option selected value="{{selected_country}}">{{selected_country}}</option>
+            {% else %}
+            <option selected value="Nothing">Global</option>
+            {% endif %}
+
+            {% for country in country_list %}
+            <option value="{{country}}">{{country}}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary my-1">Submit</button>
+    </form>
+</div>
+{% if selected_country %}
+<div class="container">
+    <h1 style="font-size:1.3em;" class="my-2 mx-2">Data for the country {{selected_country}}</h1>
+    <a href="{% url 'home' %}" style="font-size:1em;" class="my-2 mx-2">Back to Global</a>
+</div>
+{% endif %}
+<div class='container my-3'>
+        <canvas id="myChart">
+
+        </canvas>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    {% if bar %}
+        var myBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Infected', 'Recovered', 'Deaths'],
+                datasets: [{
+                    label: 'People',
+                    backgroundColor: [
+                        'rgba(0,0,255,0.5)',
+                        'rgba(0,255,0,0.5)',
+                        'rgba(255,0,0,0.5)',
+                    ],
+                    data: [{{confirmedCases}}, {{recoveredCases}}, {{deathCount}}]
+                }],
+            }
+        });
+        {% else %}
+    var myLineChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: [{% for x in reportDate %}'{{ x|escapejs }}',{% endfor %}],
+                            datasets: [{
+                                data: {{ confirmed_total }},
+                                label: 'Infected',
+                                pointStyle: 'rectRounded',
+                                borderColor: '#3333ff',
+                                }, {
+                                data: {{ deaths_total }},
+                                label: 'Deaths',
+                                pointStyle: 'rectRounded',
+                                borderColor: 'red',
+                                backgroundColor: 'rgba(255,0,0,0.5)',
+                            }],
+                        }
+    });
+    {% endif %}
+</script>
+{% endblock content %}

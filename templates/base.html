@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="{% static 'icon.svg' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Corona Tracker</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        .logo {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        #base-logo
+        {
+            width: 150px;
+            height: 100px;
+            margin-top: 3vh;
+        }
+        .logoTxt {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+             margin-top: 3vh;
+            padding: 0.3em 1em;
+            background-color: rgb(161, 23, 253);
+            border-radius: 5px;
+        }
+        footer
+        {
+            background-color: rgb(211,211,211);
+            height: 5vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container logo">
+        <img id="base-logo" src="{% static 'icon.svg'%}">
+        <h1 class="logoTxt">CoronaTracker</h1>
+    </div>
+    {% block content %}
+
+    {% endblock content %}
+    <br><br>
+    <footer>
+    <h6 align="center"> Copyright @ 2020 </h6>
+    </footer>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</html>
