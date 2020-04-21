@@ -97,13 +97,14 @@
 <h4 align='center'>Chart showing the Number of Confirmed Cases and Deaths</h4>
 <br><br><br>
 <!-- Chart showing the Increase in Cases -->
-
+{% if change %}
 <div class='container my-3'>
         <canvas id="myChart-increase">
 
         </canvas>
 </div>
 <h4 align='center'>Chart showing the Increase in the number of Confirmed Cases & Deaths</h4>
+{% endif %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 <script>
     var ctx = document.getElementById('myChart').getContext('2d');
