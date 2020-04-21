@@ -83,21 +83,21 @@
     <a href="{% url 'home' %}" style="font-size:1em;" class="my-2 mx-2">Back to Global</a>
 </div>
 {% endif %}
+{% if change %}
 <br><br>
 <h4 align='center'>Click on the labels (Infected/Deaths) to see individual Graphs.</h4>
 <br>
+{% endif %}
 <!-- Chart showing the Infected Cases -->
-
-
 <div class='container my-3'>
         <canvas id="myChart">
 
         </canvas>
 </div>
 <h4 align='center'>Chart showing the Number of Confirmed Cases and Deaths</h4>
+{% if change %}
 <br><br><br>
 <!-- Chart showing the Increase in Cases -->
-{% if change %}
 <div class='container my-3'>
         <canvas id="myChart-increase">
 
@@ -108,9 +108,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 <script>
     var ctx = document.getElementById('myChart').getContext('2d');
-    var ctx2=document.getElementById('myChart-increase').getContext('2d');
     {% if bar %}
-        var myBarChart = new Chart(ctx, {
+        var myBarChart = new Chart(document.getElementById('myChart').getContext('2d'), {
             type: 'bar',
             data: {
                 labels: ['Infected', 'Recovered', 'Deaths'],
@@ -126,7 +125,7 @@
             }
         });
         {% else %}
-            var myLineChart = new Chart(ctx, {
+        var myLineChart = new Chart(document.getElementById('myChart').getContext('2d'), {
                         type: 'line',
                         data: {
                             labels: [{% for x in reportDate %}'{{ x|escapejs }}',{% endfor %}],
@@ -145,8 +144,11 @@
                             }],
                         }
             });
-            {% if change %}
-            var myLineChart2 = new Chart(ctx2, {
+    {% endif %}
+</script>
+<script>
+    var ctx2=document.getElementById('myChart-increase').getContext('2d');
+    var myLineChart2 = new Chart(ctx2, {
                         type: 'line',
                         data: {
                             labels: [{% for x in reportDate %}'{{ x|escapejs }}',{% endfor %}],
@@ -166,7 +168,5 @@
                             }],
                         }
             });
-            {%endif %}
-    {% endif %}
 </script>
 {% endblock content %}

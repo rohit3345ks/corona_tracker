@@ -51,7 +51,7 @@ def home(request):
         'increase_recovered':increase_recovered[-1],  # Showing increase in death cases
         'country_list':country_list,
         'change':5,
-        'bar':False,
+        'bar':0,
     }
     return render(request,'app/index.html',context)
 def countryInfo(request):
@@ -73,10 +73,10 @@ def countryInfo(request):
             'confirmedCases':res4.get('confirmed').get('value'),
             'recoveredCases':res4.get('recovered').get('value'),
             'deathCount':res4.get('deaths').get('value'),
-            'bar':True,
             'lastUpdate':parse(requests.get('https://covid19.mathdro.id/api').json()['lastUpdate'][:19]),
             'country_list':country_list,
             'change':0,
+            'bar':5,
         }
         return render(request,'app/index.html',context)
     else:
