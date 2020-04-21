@@ -10,6 +10,12 @@
                 <h5 class="card-title">{{confirmedCases}}</h5>
                 <p class="card-text">Number of active cases of COVID-19</p>
             </div>
+            {% if change %}
+            <div class="card-body">
+                <h5 class="card-title">{{confirmed_change}}</h5>
+                <p class="card-text">Increase in active cases of COVID-19</p>
+            </div>
+            {% endif %}
             <div class="card-footer text-white">
                 {{lastUpdate}}
             </div>
@@ -22,6 +28,12 @@
                 <h5 class="card-title">{{recoveredCases}}</h5>
                 <p class="card-text">Number of recoveries from COVID-19</p>
             </div>
+            {% if change %}
+            <div class="card-body">
+                <h5 class="card-title">Coming Soon</h5>
+                <p class="card-text">Increase in recoveries from COVID-19</p>
+            </div>
+            {% endif %}
             <div class="card-footer text-white">
                 {{lastUpdate}}
             </div>
@@ -33,8 +45,13 @@
             <div class="card-body">
                 <h5 class="card-title">{{deathCount}}</h5>
                 <p class="card-text">Number of deaths caused by COVID-19</p>
-                
             </div>
+            {% if change %}
+            <div class="card-body">
+                <h5 class="card-title">{{death_change}}</h5>
+                <p class="card-text">Increase in deaths caused by COVID-19</p>
+            </div>
+            {% endif %}
             <div class="card-footer text-white">
                 {{lastUpdate}}
             </div>
@@ -66,14 +83,31 @@
     <a href="{% url 'home' %}" style="font-size:1em;" class="my-2 mx-2">Back to Global</a>
 </div>
 {% endif %}
+<br><br>
+<h4 align='center'>Click on the labels (Infected/Deaths) to see individual Graphs.</h4>
+<br>
+<!-- Chart showing the Infected Cases -->
+
+
 <div class='container my-3'>
         <canvas id="myChart">
 
         </canvas>
 </div>
+<h4 align='center'>Chart showing the Number of Confirmed Cases and Deaths</h4>
+<br><br><br>
+<!-- Chart showing the Increase in Cases -->
+
+<div class='container my-3'>
+        <canvas id="myChart-increase">
+
+        </canvas>
+</div>
+<h4 align='center'>Chart showing the Increase in the number of Confirmed Cases & Deaths</h4>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 <script>
     var ctx = document.getElementById('myChart').getContext('2d');
+    var ctx2=document.getElementById('myChart-increase').getContext('2d');
     {% if bar %}
         var myBarChart = new Chart(ctx, {
             type: 'bar',
@@ -82,33 +116,54 @@
                 datasets: [{
                     label: 'People',
                     backgroundColor: [
-                        'rgba(0,0,255,0.5)',
-                        'rgba(0,255,0,0.5)',
-                        'rgba(255,0,0,0.5)',
+                        'rgb(23,162,184,0.7)',
+                        'rgb(40,167,69,0.7)',
+                        'rgb(220,53,69,0.7)',
                     ],
                     data: [{{confirmedCases}}, {{recoveredCases}}, {{deathCount}}]
                 }],
             }
         });
         {% else %}
-    var myLineChart = new Chart(ctx, {
+            var myLineChart = new Chart(ctx, {
                         type: 'line',
                         data: {
                             labels: [{% for x in reportDate %}'{{ x|escapejs }}',{% endfor %}],
                             datasets: [{
                                 data: {{ confirmed_total }},
                                 label: 'Infected',
-                                pointStyle: 'rectRounded',
-                                borderColor: '#3333ff',
+                                pointStyle: 'cross',
+                                borderColor: 'rgb(234,105,35)',
+                                backgroundColor:'rgb(234,105,35,0.3)'
                                 }, {
                                 data: {{ deaths_total }},
                                 label: 'Deaths',
-                                pointStyle: 'rectRounded',
-                                borderColor: 'red',
-                                backgroundColor: 'rgba(255,0,0,0.5)',
+                                pointStyle: 'cross',
+                                borderColor: 'rgb(220,53,69)',
+                                backgroundColor: 'rgb(220,53,69,0.7)',
                             }],
                         }
-    });
+            });
+            var myLineChart2 = new Chart(ctx2, {
+                        type: 'line',
+                        data: {
+                            labels: [{% for x in reportDate %}'{{ x|escapejs }}',{% endfor %}],
+                            datasets: [{
+                                data: {{ increase_confirmed }},
+                                label: 'Increased Cases',
+                                pointStyle: 'cross',
+                                borderColor: 'rgb(234,105,35)',
+                                backgroundColor:'rgb(234,105,35,0.3)'
+                                },
+                                {
+                                data: {{ increase_deaths }},
+                                label: 'Deaths',
+                                pointStyle: 'cross',
+                                borderColor: 'rgb(220,53,69)',
+                                backgroundColor: 'rgb(220,53,69,0.7)',
+                            }],
+                        }
+            });
     {% endif %}
 </script>
 {% endblock content %}
